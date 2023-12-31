@@ -33,14 +33,31 @@ if (!window.hasInjected) {
             let attrValue = element.getAttribute(attrName);
             if (!attrValue) return false;
             let xpath = `//${element.tagName.toLowerCase()}[@${attrName}=${escapeXPathString(attrValue)}]`;
-            return document.evaluate("count(" + xpath + ")", document, null, XPathResult.ANY_TYPE, null).numberValue === 1;
+            let result;
+
+            try {
+                result = document.evaluate("count(" + xpath + ")", document, null, XPathResult.ANY_TYPE, null).numberValue === 1;
+                return result
+            } catch (err) {
+                console.log('WARNING: Element seems to not have any unique attributes.')
+                return null
+            }
+
         }
 
         function isUniqueByText(element) {
             let text = element.textContent.trim();
             if (!text) return false;
             let xpath = `//${element.tagName.toLowerCase()}[contains(text(), ${escapeXPathString(text)})]`;
-            return document.evaluate("count(" + xpath + ")", document, null, XPathResult.ANY_TYPE, null).numberValue === 1;
+            let result;
+
+            try {
+                result = document.evaluate("count(" + xpath + ")", document, null, XPathResult.ANY_TYPE, null).numberValue === 1;
+                return result;
+            } catch (err) {
+                console.log('WARNING: Element seems to not have any unique text.')
+                return null
+            }
         }
 
         // Function to generate a unique XPath using parent attributes
