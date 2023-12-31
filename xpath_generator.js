@@ -15,13 +15,15 @@ if (!window.hasInjected) {
             if (!str.includes("'")) return `'${str}'`;
             if (!str.includes('"')) return `"${str}"`;
             let parts = str.split("'");
+            let delimiter = `, "'", `
             let xpathString = "concat(";
             for (let i = 0; i < parts.length; i++) {
                 xpathString += `'${parts[i]}'`;
-                if (i < parts.length - 1) {
-                    xpathString += `, "'", `;
-                }
+                xpathString += delimiter;
             }
+
+            // Deletes delimiter for final element
+            xpathString = xpathString.substring(0, parts.length - delimiter.length)
             xpathString += ")";
 
             return xpathString;
@@ -47,7 +49,7 @@ if (!window.hasInjected) {
                 let index = 1;
                 for (var sibling = current.previousElementSibling; sibling; sibling = sibling.previousElementSibling) {
                     if (sibling.nodeType === 1 && sibling.tagName === current.tagName) {
-                        index++;
+                        ++index;
                     }
                 }
                 let tagName = current.tagName.toLowerCase();
@@ -73,7 +75,7 @@ if (!window.hasInjected) {
                 let index = 1;
                 for (let sibling = currentElement.previousElementSibling; sibling; sibling = sibling.previousElementSibling) {
                     if (sibling.nodeType === 1 && sibling.tagName === currentElement.tagName) {
-                        index++;
+                        ++index
                     }
                 }
                 let pathIndex = (index > 1 ? `[${index}]` : '');
@@ -98,19 +100,19 @@ if (!window.hasInjected) {
         // Special handling for svg elements
         if (element.tagName.toLowerCase() === 'svg' || element.tagName.toLowerCase() === 'path') {
             let parentElement = element.parentElement;
-            if (parentElement) {
-                let parentXPath = computeXPath(parentElement);
-                if (parentXPath) {
-                    if (parentXPath.startsWith('//')){
-                        return parentXPath;
-                    } else if (parentXPath.startsWith('/')){
-                        return '/' + parentXPath;
-                    } else {
-                        return '//' + parentXPath;
-                    }	
-                }
-            }
-            return null;
+            if (!parentElement) return null;
+
+            let parentXPath = computeXPath(parentElement);
+            if (!parentXPath) return null;
+
+
+            if (parentXPath.startsWith('//')){
+                return parentXPath;
+            } else if (parentXPath.startsWith('/')){
+                return '/' + parentXPath;
+            } 
+
+            return '//' + parentXPath;
         }
 
         const attributes = ['id', 'name', 'type', 'value', 'title', 'alt', 'col-id', 'colid', 'ref', 'role', 'ng-bind', 'ng-click'];
