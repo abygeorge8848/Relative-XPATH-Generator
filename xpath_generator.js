@@ -1,10 +1,10 @@
 if (!window.hasInjected) {
     window.hasInjected = true;
-        
-    document.addEventListener('contextmenu', function(e) {
-          e.preventDefault(); // Prevents the browser's context menu from showing up
-          var xpath = computeXPath(e.target);
-          console.log(`You have right clicked on : \n ${xpath}`);
+
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault(); // Prevents the browser's context menu from showing up
+        var xpath = computeXPath(e.target);
+        console.log(`You have right clicked on : \n ${xpath}`);
     });
 
 
@@ -95,7 +95,7 @@ if (!window.hasInjected) {
                 }
             }
             return null;
-        }    
+        }
 
         // Special handling for svg elements
         if (element.tagName.toLowerCase() === 'svg' || element.tagName.toLowerCase() === 'path') {
@@ -106,11 +106,11 @@ if (!window.hasInjected) {
             if (!parentXPath) return null;
 
 
-            if (parentXPath.startsWith('//')){
+            if (parentXPath.startsWith('//')) {
                 return parentXPath;
-            } else if (parentXPath.startsWith('/')){
+            } else if (parentXPath.startsWith('/')) {
                 return '/' + parentXPath;
-            } 
+            }
 
             return '//' + parentXPath;
         }
@@ -122,7 +122,7 @@ if (!window.hasInjected) {
             }
         }
 
-        if (element.className && typeof element.className === 'string') {	
+        if (element.className && typeof element.className === 'string') {
             let classes = element.className.trim().split(/\s+/);
             let combinedClassSelector = classes.join('.');
             let xpath = `//${element.tagName.toLowerCase()}[contains(@class, '${combinedClassSelector}')]`;
@@ -136,6 +136,6 @@ if (!window.hasInjected) {
         }
 
         return generateRelativeXPath(element);
-        }
+    }
 
 }
