@@ -43,22 +43,6 @@ if (!window.hasInjected) {
             return document.evaluate("count(" + xpath + ")", document, null, XPathResult.ANY_TYPE, null).numberValue === 1;
         }
 
-        function getChildRelativeXPath(child, parent) {
-            var path = '';
-            for (var current = child; current && current !== parent; current = current.parentNode) {
-                let index = 1;
-                for (var sibling = current.previousElementSibling; sibling; sibling = sibling.previousElementSibling) {
-                    if (sibling.nodeType === 1 && sibling.tagName === current.tagName) {
-                        ++index;
-                    }
-                }
-                let tagName = current.tagName.toLowerCase();
-                let pathIndex = (index > 1 ? `[${index}]` : '');
-                path = '/' + tagName + pathIndex + path;
-            }
-            return path;
-        }
-
         // Function to generate a unique XPath using parent attributes
         function generateRelativeXPath(element) {
             var paths = [];
